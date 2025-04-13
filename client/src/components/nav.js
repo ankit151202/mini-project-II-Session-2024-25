@@ -1,7 +1,19 @@
 import React from "react";
-import { ThemeProvider, createTheme, Typography } from "@material-ui/core";
-import { BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
-import { Public, Work, Movie, LocalHospital, SettingsApplications, SportsBasketball, Devices } from "@material-ui/icons";
+import {
+  ThemeProvider,
+  createTheme,
+  Typography,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  useMediaQuery,
+  Box
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const darkTheme = createTheme({
   palette: {
@@ -12,31 +24,101 @@ const darkTheme = createTheme({
   },
 });
 
-const Navbar = ({ onCategoryChange }) => {
-  const [value, setValue] = React.useState("general");
+const categories = [
+  { label: "General", value: "general" },
+  { label: "Business", value: "business" },
+  { label: "Entertainment", value: "entertainment" },
+  { label: "Health", value: "health" },
+  { label: "Science", value: "science" },
+  { label: "Sports", value: "sports" },
+  { label: "Technology", value: "technology" },
+];
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-    onCategoryChange(newValue);
+const Navbar = ({ onCategoryChange }) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [selectedCategory, setSelectedCategory] = React.useState("general");
+
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+    onCategoryChange(category);
+    if (isMobile) setDrawerOpen(false);
   };
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Paper elevation={4} style={{ position: "sticky", top: 0, width: "100%", zIndex: 1000, padding: "10px", textAlign: "center" }}>
-        <Typography variant="h5" style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 700, color: "#00bcd4" }}>
-          News Aggregator
-        </Typography>
-        
-        <BottomNavigation value={value} onChange={handleChange} style={{ backgroundColor: "transparent", display: "flex", justifyContent: "center" }}>
-          <BottomNavigationAction label="General" value="general" icon={<Public />} />
-          <BottomNavigationAction label="Business" value="business" icon={<Work />} />
-          <BottomNavigationAction label="Entertainment" value="entertainment" icon={<Movie />} />
-          <BottomNavigationAction label="Health" value="health" icon={<LocalHospital />} />
-          <BottomNavigationAction label="Science" value="science" icon={<SettingsApplications />} />
-          <BottomNavigationAction label="Sports" value="sports" icon={<SportsBasketball />} />
-          <BottomNavigationAction label="Technology" value="technology" icon={<Devices />} />
-        </BottomNavigation>
-      </Paper>
+      <AppBar position="sticky" style={{ backgroundColor: darkTheme.palette.background.paper }}>
+        <Toolbar>
+          {isMobile && (
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={() => setDrawerOpen(true)}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
+          <Typography
+            variant="h5"
+            style={{
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 700,
+              color: "#00bcd4",
+              flexGrow: 1,
+              textAlign: isMobile ? "center" : "left",
+              marginLeft: isMobile ? 0 : 16,
+            }}
+          >
+            News Aggregator
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Box width={250} role="presentation">
+          <List>
+            {categories.map((cat) => (
+              <ListItem
+                button
+                key={cat.value}
+                selected={selectedCategory === cat.value}
+                onClick={() => handleCategorySelect(cat.value)}
+              >
+                <ListItemText primary={cat.label} />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Drawer>
+
+      {!isMobile && (
+        <Box
+          display="flex"
+          justifyContent="center"
+          bgcolor={darkTheme.palette.background.paper}
+          p={1}
+        >
+          {categories.map((cat) => (
+            <Box
+              key={cat.value}
+              mx={1.5}
+              px={2}
+              py={1}
+              borderRadius="8px"
+              style={{
+                backgroundColor: selectedCategory === cat.value ? "#00bcd4" : "transparent",
+                color: selectedCategory === cat.value ? "#000" : "#fff",
+                cursor: "pointer",
+                transition: "0.3s",
+              }}
+              onClick={() => handleCategorySelect(cat.value)}
+            >
+              {cat.label}
+            </Box>
+          ))}
+        </Box>
+      )}
     </ThemeProvider>
   );
 };
