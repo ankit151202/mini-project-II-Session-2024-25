@@ -11,7 +11,10 @@ const app = express();
 const PORT = config.port || 4000;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({origin: [
+    'http://localhost:3000',
+    'https://mini-project-ii-session-2024-25.vercel.app'
+  ], credentials: true }));
 app.use(express.json());
 
 // MongoDB URI (from .env or fallback)
