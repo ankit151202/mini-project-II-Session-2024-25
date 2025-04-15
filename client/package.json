@@ -4,7 +4,7 @@
   "description": "a simple news-aggregator-app which collects news stories from multiple sources on various topics in real-time.",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
     "build": "react-scripts build"
   },
   "author": "@mcking-07",

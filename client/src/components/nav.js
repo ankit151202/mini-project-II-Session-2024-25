@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ThemeProvider,
   createTheme,
@@ -11,9 +11,13 @@ import {
   ListItem,
   ListItemText,
   useMediaQuery,
-  Box
+  Box,
+  Button,
+  InputBase,
+  Paper
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import { Link } from "react-router-dom";
 
 const darkTheme = createTheme({
   palette: {
@@ -34,15 +38,23 @@ const categories = [
   { label: "Technology", value: "technology" },
 ];
 
-const Navbar = ({ onCategoryChange }) => {
+const Navbar = ({ onCategoryChange, userEmail, onLogout, onSearch }) => {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [selectedCategory, setSelectedCategory] = React.useState("general");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("general");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     onCategoryChange(category);
     if (isMobile) setDrawerOpen(false);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(searchQuery);
+    }
   };
 
   return (
@@ -72,6 +84,27 @@ const Navbar = ({ onCategoryChange }) => {
           >
             News Aggregator
           </Typography>
+
+          
+
+          {userEmail ? (
+            <>
+              <Typography style={{ marginRight: 16 }}>{userEmail}</Typography>
+              <Button onClick={onLogout} color="primary" variant="outlined">
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              variant="outlined"
+              color="primary"
+              size="small"
+            >
+              Login
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
 
@@ -102,7 +135,7 @@ const Navbar = ({ onCategoryChange }) => {
           {categories.map((cat) => (
             <Box
               key={cat.value}
-              mx={1.5}
+              mx={1}
               px={2}
               py={1}
               borderRadius="8px"

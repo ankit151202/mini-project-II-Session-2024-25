@@ -49,12 +49,25 @@ const fetchArticles = async (model) => {
 };
 
 const start = async () => {
-  cron.schedule(`*/${parseInt(config.updateFrequency.minute)} */${parseInt(config.updateFrequency.hour)} * * *`, async () => {
+  const minute = parseInt(config.updateFrequency?.minute);
+  const hour = parseInt(config.updateFrequency?.hour);
+
+  if (isNaN(minute) || isNaN(hour)) {
+    logger.error('Invalid update frequency: minute or hour is not a number.');
+    return;
+  }
+
+  const cronExpression = `*/${minute} */${hour} * * *`;
+
+  cron.schedule(cronExpression, async () => {
     for (const category of categories) {
       logger.info(`Updating Database for ${category.collection.collectionName}`);
       await fetchArticles(category);
     }
   });
+
+  logger.info(`Cron job scheduled with expression: ${cronExpression}`);
 };
+
 
 module.exports = { start };

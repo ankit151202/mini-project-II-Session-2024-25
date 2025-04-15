@@ -20,10 +20,7 @@ export default function Footer() {
         <div style={{ flex: '1 1 150px' }}>
           <h3 style={{ color: '#fff', marginBottom: '0.5rem' }}>Follow Us</h3>
           <div style={{ display: 'flex', gap: '0.8rem' }}>
-            <a href="https://twitter.com" style={iconStyle}>🐦</a>
-            <a href="https://facebook.com" style={iconStyle}>📘</a>
-            <a href="https://linkedin.com" style={iconStyle}>🔗</a>
-            <a href="https://github.com" style={iconStyle}>💻</a>
+            
           </div>
         </div>
       </div>
