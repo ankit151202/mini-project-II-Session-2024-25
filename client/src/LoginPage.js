@@ -33,7 +33,7 @@ const LoginPage = ({ onLogin }) => {
 
   const login = async () => {
     try {
-      const res = await axios.post("http://localhost:4000/login", { email, password });
+      const res = await axios.post("https://backendnews-ikp9.onrender.com/login", { email, password });
       setUserId(res.data.userId);
       setIsLoggedIn(true);
       localStorage.setItem("userEmail", email); // Save in localStorage
@@ -45,7 +45,7 @@ const LoginPage = ({ onLogin }) => {
 
   const register = async () => {
     try {
-      await axios.post("http://localhost:4000/register", { email, password });
+      await axios.post("https://backendnews-ikp9.onrender.com/register", { email, password });
       alert("Registration successful. Please login.");
       setTab(0); // Switch to login tab
     } catch (err) {
@@ -56,7 +56,7 @@ const LoginPage = ({ onLogin }) => {
   const selectNews = async () => {
     if (!preferredNews) return alert("Please select a news type.");
     try {
-      await axios.post("http://localhost:4000/select-news", { userId, preferredNews });
+      await axios.post("https://backendnews-ikp9.onrender.com/select-news", { userId, preferredNews });
       alert(`News preference "${preferredNews}" saved.`);
       localStorage.setItem("preferredNews", preferredNews); // Save the news preference
       navigate("/"); // Go to homepage
